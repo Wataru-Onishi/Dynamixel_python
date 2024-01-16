@@ -22,7 +22,7 @@ ADDR_MX_GOAL_VELOCITY = 104                    # Control table address for goal 
 # Default settings
 TORQUE_ENABLE = 1                              # Value to enable the torque
 TORQUE_DISABLE = 0                             # Value to disable the torque
-# DXL_MOVING_SPEED = 100                         # Dynamixel will rotate at this speed (value : 0~1023)
+DXL_MOVING_SPEED = 100                         # Dynamixel will rotate at this speed (value : 0~1023)
 
 # Initialize PortHandler and PacketHandler instances
 portHandler = PortHandler(DEVICENAME)
