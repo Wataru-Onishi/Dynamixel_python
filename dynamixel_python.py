@@ -67,7 +67,7 @@ class MyController(Controller):
         value = transf(value)
         if(abs(value) <1):
             value = 0
-            odrv0.axis0.controller.input_vel = 0
+
         else:
             # Set Dynamixel goal velocity
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
@@ -83,7 +83,7 @@ class MyController(Controller):
         value = transf(value)
         if(abs(value) <1):
             value = 0
-            odrv0.axis0.controller.input_vel = 0
+
         else:
             # Set Dynamixel goal velocity
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
