@@ -58,7 +58,7 @@ class MyController(Controller):
     def on_R3_down(self, value):
         value = transf(value)
         if(abs(value) <1):
-            DXL_MOVING_SPEED = 0
+            DXL_MOVING_SPEED = 100
             dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
 
