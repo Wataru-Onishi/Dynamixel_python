@@ -67,25 +67,10 @@ class MyController(Controller):
             DXL_MOVING_SPEED = 100
             dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
+         
 
-            print(value)
-            
-    def on_R3_up(self, value):
-        value = transf(value)
-        if(abs(value) <1):
-            value = 0
 
-        else:
-            # Set Dynamixel goal velocity
-            dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
-            if dxl_comm_result != COMM_SUCCESS:
-                print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-            elif dxl_error != 0:
-                print("%s" % packetHandler.getRxPacketError(dxl_error))
-            else:
-                print("Goal velocity set")
-            print(value)
-    
+
 
 
 controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
