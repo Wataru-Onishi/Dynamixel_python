@@ -95,15 +95,6 @@ class MyController(Controller):
                 print("Goal velocity set")
             print(value)
     
-    def on_R3_y_at_rest(self):
-
-
-    def on_circle_press(self):
-
-    
-    def on_x_press(self):
-
-        exit()
 
 
 controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
