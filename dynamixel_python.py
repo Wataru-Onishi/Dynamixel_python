@@ -69,7 +69,7 @@ class MyController(Controller):
             value = 0
 
         else:
-            DXL_MOVING_SPEED = 100
+            DXL_MOVING_SPEED = 300
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
 
             print(value)
