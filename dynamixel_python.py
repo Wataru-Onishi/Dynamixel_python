@@ -22,7 +22,7 @@ ADDR_MX_GOAL_VELOCITY = 104                    # Control table address for goal 
 # Default settings
 TORQUE_ENABLE = 1                              # Value to enable the torque
 TORQUE_DISABLE = 0                             # Value to disable the torque
-DXL_MOVING_SPEED = 0                         # Dynamixel will rotate at this speed (value : 0~1023)
+#DXL_MOVING_SPEED = 0                         # Dynamixel will rotate at this speed (value : 0~1023)
 
 # Initialize PortHandler and PacketHandler instances
 portHandler = PortHandler(DEVICENAME)
@@ -44,14 +44,6 @@ else:
 
 # Enable Dynamixel Torque
 dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
-if dxl_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-elif dxl_error != 0:
-    print("%s" % packetHandler.getRxPacketError(dxl_error))
-else:
-    print("Torque enabled")
-
-
 
 
 def transf(raw):
@@ -66,10 +58,14 @@ class MyController(Controller):
     def on_R3_down(self, value):
         value = transf(value)
         if(abs(value) <1):
-            value = 0
+            DXL_MOVING_SPEED = 0
+            dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
+            dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
+
 
         else:
-            DXL_MOVING_SPEED = 300
+            DXL_MOVING_SPEED = 100
+            dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
 
             print(value)
