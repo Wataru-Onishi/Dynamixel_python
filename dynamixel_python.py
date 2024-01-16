@@ -22,7 +22,7 @@ ADDR_MX_GOAL_VELOCITY = 104                    # Control table address for goal 
 # Default settings
 TORQUE_ENABLE = 1                              # Value to enable the torque
 TORQUE_DISABLE = 0                             # Value to disable the torque
-DXL_MOVING_SPEED = 200                         # Dynamixel will rotate at this speed (value : 0~1023)
+# DXL_MOVING_SPEED = 100                         # Dynamixel will rotate at this speed (value : 0~1023)
 
 # Initialize PortHandler and PacketHandler instances
 portHandler = PortHandler(DEVICENAME)
@@ -69,14 +69,9 @@ class MyController(Controller):
             value = 0
 
         else:
-            # Set Dynamixel goal velocity
+            DXL_MOVING_SPEED = 100
             dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
-            if dxl_comm_result != COMM_SUCCESS:
-                print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-            elif dxl_error != 0:
-                print("%s" % packetHandler.getRxPacketError(dxl_error))
-            else:
-                print("Goal velocity set")
+
             print(value)
             
     def on_R3_up(self, value):
