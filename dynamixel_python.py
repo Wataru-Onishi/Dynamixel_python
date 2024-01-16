@@ -96,14 +96,13 @@ class MyController(Controller):
             print(value)
     
     def on_R3_y_at_rest(self):
-        odrv0.axis0.controller.input_vel =0
+
 
     def on_circle_press(self):
-        odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+
     
     def on_x_press(self):
-        odrv0.axis0.controller.input_vel = 0
-        odrv0.axis0.requested_state = AXIS_STATE_IDLE
+
         exit()
 
 
