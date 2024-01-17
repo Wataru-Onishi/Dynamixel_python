@@ -5,7 +5,7 @@ from dynamixel_sdk import *  # Dynamixel SDKのインポート
 DXL1_ID = 2  # モーターID2
 DXL2_ID = 3  # モーターID3
 BAUDRATE = 57600  # ボーレート
-DEVICENAME = 'COM1'  # ポート名（Windowsでは'COM1', Linuxでは'/dev/ttyUSB0'など）
+DEVICENAME = '/dev/ttyUSB0'  # ポート名（Windowsでは'COM1', Linuxでは'/dev/ttyUSB0'など）
 
 # Dynamixel SDKの設定
 portHandler = PortHandler(DEVICENAME)
