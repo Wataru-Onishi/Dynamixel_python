@@ -17,8 +17,8 @@ ADDR_MX_GOAL_VELOCITY = 104
 # Default settings
 TORQUE_ENABLE = 1                              
 TORQUE_DISABLE = 0                             
-DXL_MOVING_SPEED_1 = 200                        # Speed for ID 2
-DXL_MOVING_SPEED_2 = -200                       # Speed for ID 3 (negative value for reverse direction)
+DXL_MOVING_SPEED_1 = 100                        # Speed for ID 2
+DXL_MOVING_SPEED_2 = -100                       # Speed for ID 3 (negative value for reverse direction)
 
 # Initialize PortHandler and PacketHandler instances
 portHandler = PortHandler(DEVICENAME)
