@@ -3,7 +3,7 @@ import time
 from dynamixel_sdk import *                    # Uses Dynamixel SDK library
 
 # Dynamixel settings
-DXL_ID = 1                                     # Dynamixel ID
+DXL_ID = 3                                     # Dynamixel ID
 BAUDRATE = 57600                               # Dynamixel default baudrate
 DEVICENAME = '/dev/ttyUSB0'                    # Check your device port
 
