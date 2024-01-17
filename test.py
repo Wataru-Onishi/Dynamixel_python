@@ -60,7 +60,7 @@ for DXL_ID in [DXL_ID_1, DXL_ID_2]:
         print(f"Goal velocity set for Dynamixel ID: {DXL_ID}")
 
 # Wait for a bit
-time.sleep(10)
+time.sleep(20)
 
 # Disable Dynamixel Torque for both servos
 for DXL_ID in [DXL_ID_1, DXL_ID_2]:
