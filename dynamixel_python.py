@@ -4,7 +4,7 @@ from dynamixel_sdk import *  # Dynamixel SDKのインポート
 # Dynamixelモーターの設定
 DXL1_ID = 2  # モーターID2
 DXL2_ID = 3  # モーターID3
-ADDR_MX_MOVING_SPEED = 32  # MXシリーズの場合の速度制御アドレス
+ADDR_MX_MOVING_SPEED = 104  # MXシリーズの場合の速度制御アドレス
 BAUDRATE = 57600  # ボーレート
 DEVICENAME = '/dev/ttyUSB0'  # ポート名（Windowsでは'COM1', Linuxでは'/dev/ttyUSB0'など）
 
@@ -32,7 +32,7 @@ packetHandler.write2ByteTxRx(portHandler, DXL1_ID, ADDR_MX_MOVING_SPEED, DXL_MOV
 packetHandler.write2ByteTxRx(portHandler, DXL2_ID, ADDR_MX_MOVING_SPEED, DXL_MOVING_SPEED)
 
 # 30秒間待つ
-time.sleep(30)
+time.sleep(5)
 
 # モーターを停止
 packetHandler.write2ByteTxRx(portHandler, DXL1_ID, ADDR_MX_MOVING_SPEED, 0)
