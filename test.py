@@ -17,7 +17,7 @@ ADDR_MX_GOAL_VELOCITY = 104
 # Default settings
 TORQUE_ENABLE = 1                              
 TORQUE_DISABLE = 0                             
-DXL_MOVING_SPEED = 200                         
+DXL_MOVING_SPEED = 100                         
 
 # Initialize PortHandler and PacketHandler instances
 portHandler = PortHandler(DEVICENAME)
@@ -47,6 +47,8 @@ for DXL_ID in [DXL_ID_1, DXL_ID_2]:
     else:
         print(f"Torque enabled for Dynamixel ID: {DXL_ID}")
 
+time.sleep(10)
+
 # Set Dynamixel goal velocity for both servos
 for DXL_ID in [DXL_ID_1, DXL_ID_2]:
     dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
@@ -58,7 +60,7 @@ for DXL_ID in [DXL_ID_1, DXL_ID_2]:
         print(f"Goal velocity set for Dynamixel ID: {DXL_ID}")
 
 # Wait for a bit
-time.sleep(2)
+time.sleep(10)
 
 # Disable Dynamixel Torque for both servos
 for DXL_ID in [DXL_ID_1, DXL_ID_2]:
