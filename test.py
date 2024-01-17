@@ -17,7 +17,8 @@ ADDR_MX_GOAL_VELOCITY = 104
 # Default settings
 TORQUE_ENABLE = 1                              
 TORQUE_DISABLE = 0                             
-DXL_MOVING_SPEED = 100                         
+DXL_MOVING_SPEED_1 = 200                        # Speed for ID 2
+DXL_MOVING_SPEED_2 = -200                       # Speed for ID 3 (negative value for reverse direction)
 
 # Initialize PortHandler and PacketHandler instances
 portHandler = PortHandler(DEVICENAME)
@@ -47,17 +48,22 @@ for DXL_ID in [DXL_ID_1, DXL_ID_2]:
     else:
         print(f"Torque enabled for Dynamixel ID: {DXL_ID}")
 
-time.sleep(10)
-
 # Set Dynamixel goal velocity for both servos
-for DXL_ID in [DXL_ID_1, DXL_ID_2]:
-    dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
-    if dxl_comm_result != COMM_SUCCESS:
-        print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-    elif dxl_error != 0:
-        print("%s" % packetHandler.getRxPacketError(dxl_error))
-    else:
-        print(f"Goal velocity set for Dynamixel ID: {DXL_ID}")
+dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID_1, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED_1)
+if dxl_comm_result != COMM_SUCCESS:
+    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+elif dxl_error != 0:
+    print("%s" % packetHandler.getRxPacketError(dxl_error))
+else:
+    print(f"Goal velocity set for Dynamixel ID: {DXL_ID_1}")
+
+dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID_2, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED_2)
+if dxl_comm_result != COMM_SUCCESS:
+    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+elif dxl_error != 0:
+    print("%s" % packetHandler.getRxPacketError(dxl_error))
+else:
+    print(f"Goal velocity set for Dynamixel ID: {DXL_ID_2}")
 
 # Wait for a bit
 time.sleep(20)
