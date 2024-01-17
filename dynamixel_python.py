@@ -4,6 +4,7 @@ from dynamixel_sdk import *  # Dynamixel SDKのインポート
 # Dynamixelモーターの設定
 DXL1_ID = 2  # モーターID2
 DXL2_ID = 3  # モーターID3
+ADDR_MX_MOVING_SPEED = 32  # MXシリーズの場合の速度制御アドレス
 BAUDRATE = 57600  # ボーレート
 DEVICENAME = '/dev/ttyUSB0'  # ポート名（Windowsでは'COM1', Linuxでは'/dev/ttyUSB0'など）
 
