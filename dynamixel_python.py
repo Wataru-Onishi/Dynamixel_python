@@ -1,96 +1,41 @@
-# -*- coding: utf-8 -*-
-from __future__ import division
 import time
-from pyPS4Controller.controller import Controller
+from dynamixel_sdk import *  # Dynamixel SDKのインポート
 
-import os
-import time
-from dynamixel_sdk import *
+# Dynamixelモーターの設定
+DXL1_ID = 2  # モーターID2
+DXL2_ID = 3  # モーターID3
+BAUDRATE = 57600  # ボーレート
+DEVICENAME = 'COM1'  # ポート名（Windowsでは'COM1', Linuxでは'/dev/ttyUSB0'など）
 
-DXL_ID = 3                                     # Dynamixel ID
-BAUDRATE = 57600                               # Dynamixel default baudrate
-DEVICENAME = '/dev/ttyUSB0'                    # Check your device port
-
-
-# Protocol version
-PROTOCOL_VERSION = 2.0
-
-# Control table addresses
-ADDR_MX_TORQUE_ENABLE = 64                     # Control table address for torque enable
-ADDR_MX_GOAL_VELOCITY = 104                    # Control table address for goal velocity
-
-# Default settings
-TORQUE_ENABLE = 1                              # Value to enable the torque
-TORQUE_DISABLE = 0                             # Value to disable the torque
-DXL_MOVING_SPEED = 100                         # Dynamixel will rotate at this speed (value : 0~1023)
-
-# Initialize PortHandler and PacketHandler instances
+# Dynamixel SDKの設定
 portHandler = PortHandler(DEVICENAME)
-packetHandler = PacketHandler(PROTOCOL_VERSION)
+packetHandler = PacketHandler(2.0)  # バージョンに応じて変更
 
-# Open port
+# ポートを開く
 if portHandler.openPort():
-    print("Port opened")
+    print("Succeeded to open the port")
 else:
     print("Failed to open the port")
     quit()
 
-# Set port baudrate
+# ボーレートを設定
 if portHandler.setBaudRate(BAUDRATE):
-    print("Baudrate set")
+    print("Succeeded to change the baudrate")
 else:
-    print("Failed to set the baudrate")
+    print("Failed to change the baudrate")
     quit()
 
-# Enable Dynamixel Torque
-dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
-if dxl_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-elif dxl_error != 0:
-    print("%s" % packetHandler.getRxPacketError(dxl_error))
-else:
-    print("Torque enabled")
+# モーターを動かす（ここで速度や回転方向を設定）
+DXL_MOVING_SPEED = 100  # 例としての速度値
+packetHandler.write2ByteTxRx(portHandler, DXL1_ID, ADDR_MX_MOVING_SPEED, DXL_MOVING_SPEED)
+packetHandler.write2ByteTxRx(portHandler, DXL2_ID, ADDR_MX_MOVING_SPEED, DXL_MOVING_SPEED)
 
+# 30秒間待つ
+time.sleep(30)
 
+# モーターを停止
+packetHandler.write2ByteTxRx(portHandler, DXL1_ID, ADDR_MX_MOVING_SPEED, 0)
+packetHandler.write2ByteTxRx(portHandler, DXL2_ID, ADDR_MX_MOVING_SPEED, 0)
 
-
-def transf(raw):
-    temp = raw/65534 * 2 * 10
-    return round(temp, 1)
-
-class MyController(Controller):
-
-    def __init__(self, **kwargs):
-        Controller.__init__(self, **kwargs)
-    
-    def on_R3_down(self, value):
-        value = transf(value)
-        if(abs(value) <1):
-            value = 0
-
-        else:
-            # Set Dynamixel goal velocity
-            dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
-
-            print(value)
-            
-    def on_R3_up(self, value):
-        value = transf(value)
-        if(abs(value) <1):
-            value = 0
-
-        else:
-            # Set Dynamixel goal velocity
-            dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED)
-            if dxl_comm_result != COMM_SUCCESS:
-                print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-            elif dxl_error != 0:
-                print("%s" % packetHandler.getRxPacketError(dxl_error))
-            else:
-                print("Goal velocity set")
-            print(value)
-    
-
-
-controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
-controller.listen()
+# ポートを閉じる
+portHandler.closePort()
