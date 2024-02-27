@@ -1,82 +1,35 @@
 import time
-from dynamixel_sdk import *                    
+import odrive
+from odrive.enums import *
 
-# Dynamixel settings
-DXL_ID_1 = 2                                    # Dynamixel ID 2
-DXL_ID_2 = 3                                    # Dynamixel ID 3
-BAUDRATE = 57600                                # Dynamixel default baudrate
-DEVICENAME = '/dev/ttyUSB0'                     # Check your device port
+# ODriveを検出
+print("ODriveを検出中...")
+odrv0 = odrive.find_any()
+print("ODriveが検出されました。")
 
-# Protocol version
-PROTOCOL_VERSION = 2.0
+# モーターの設定を行う
+# ここでは、例としてモーター0を使用
+axis = odrv0.axis0
 
-# Control table addresses
-ADDR_MX_TORQUE_ENABLE = 64                     
-ADDR_MX_GOAL_VELOCITY = 104                    
+# モーターを閉ループ制御モードに設定
+axis.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
 
-# Default settings
-TORQUE_ENABLE = 1                              
-TORQUE_DISABLE = 0                             
-DXL_MOVING_SPEED_1 = 100                        # Speed for ID 2
-DXL_MOVING_SPEED_2 = -100                       # Speed for ID 3 (negative value for reverse direction)
+# 制御モードを速度制御に設定
+axis.controller.config.control_mode = CONTROL_MODE_VELOCITY_CONTROL
 
-# Initialize PortHandler and PacketHandler instances
-portHandler = PortHandler(DEVICENAME)
-packetHandler = PacketHandler(PROTOCOL_VERSION)
+# モーターを定速で回転させる
+# ここでは、例として1000counts/sで回転させる
+desired_velocity = 1000 # この値は実際の要件に応じて調整してください
+axis.controller.vel_setpoint = desired_velocity
 
-# Open port
-if portHandler.openPort():
-    print("Port opened")
-else:
-    print("Failed to open the port")
-    quit()
+print(f"モーターを{desired_velocity}counts/sで回転中...")
 
-# Set port baudrate
-if portHandler.setBaudRate(BAUDRATE):
-    print("Baudrate set")
-else:
-    print("Failed to set the baudrate")
-    quit()
+# ここでは、10秒間回転させてから停止
+time.sleep(10)
 
-# Enable Dynamixel Torque for both servos
-for DXL_ID in [DXL_ID_1, DXL_ID_2]:
-    dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE)
-    if dxl_comm_result != COMM_SUCCESS:
-        print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-    elif dxl_error != 0:
-        print("%s" % packetHandler.getRxPacketError(dxl_error))
-    else:
-        print(f"Torque enabled for Dynamixel ID: {DXL_ID}")
+# モーターを停止
+axis.controller.vel_setpoint = 0
+print("モーターを停止しました。")
 
-# Set Dynamixel goal velocity for both servos
-dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID_1, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED_1)
-if dxl_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-elif dxl_error != 0:
-    print("%s" % packetHandler.getRxPacketError(dxl_error))
-else:
-    print(f"Goal velocity set for Dynamixel ID: {DXL_ID_1}")
-
-dxl_comm_result, dxl_error = packetHandler.write4ByteTxRx(portHandler, DXL_ID_2, ADDR_MX_GOAL_VELOCITY, DXL_MOVING_SPEED_2)
-if dxl_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-elif dxl_error != 0:
-    print("%s" % packetHandler.getRxPacketError(dxl_error))
-else:
-    print(f"Goal velocity set for Dynamixel ID: {DXL_ID_2}")
-
-# Wait for a bit
-time.sleep(20)
-
-# Disable Dynamixel Torque for both servos
-for DXL_ID in [DXL_ID_1, DXL_ID_2]:
-    dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE)
-    if dxl_comm_result != COMM_SUCCESS:
-        print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
-    elif dxl_error != 0:
-        print("%s" % packetHandler.getRxPacketError(dxl_error))
-    else:
-        print(f"Torque disabled for Dynamixel ID: {DXL_ID}")
-
-# Close port
-portHandler.closePort()
+# ODriveをディスエンゲージ
+axis.requested_state = AXIS_STATE_IDLE
